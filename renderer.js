@@ -1,15 +1,8 @@
 
-function msg(config){    
-    window.electron.upload(config)
-}
+document.getElementById('file-choose-button').addEventListener('click', () => {    
+    const file = document.getElementById('file-path')        
+    const path = file.files[0].path    
+    console.log(path)
+    window.electron.fileChosen(path)    
 
-document.querySelector('#btn').addEventListener('click', () => {
-    const file = document.getElementById('pointcloud')    
-    const project = document.getElementById('project')
-    const uploadconfig = {
-        project: project.value,
-        path: file.files[0].path
-    }
-    console.log(uploadconfig)
-    msg(uploadconfig)
 })

@@ -10,25 +10,15 @@
   <body>
     <h1>Point Cloud Collector</h1>    
     <div>
-            Point Cloud File:<input type="file" id="pointcloud" name="pointcloud" />
-    </div>
+            Point Cloud File:<input type="file" id="file-path" name="pointcloud" />
+    </div>    
     <div>
-        Project:<input type="text" id="project" name="project" value="my-project"/>
+        <button id="file-choose-button">Choose</button>
     </div>
-    <div>
-        Client:<input type="text" id="client" name="client" value="my-project"/>
-    </div>
-    <div>
-        Site Location Latitude:<input type="text" id="latitude" name="latitude" value="0"/> Longitude:<input type="text" id="longitude" name="longitude" value="0"/>
-    </div>
-    <div>
-        <button id="btn">Upload</button>
-    </div>
-    <div>
+    <!-- <div>
         <pre id="progress"></pre>    
     </div>
-    
-
+     -->
   </body>
   <script src="renderer.js"></script>
 </html>

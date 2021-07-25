@@ -1,23 +1,34 @@
 const { contextBridge, ipcRenderer:ipc } = require('electron')
 
 contextBridge.exposeInMainWorld('electron', {
+  fileChosen: (path) => {
+    console.log('file-chosen')
+    ipc.send('command', {type:'file-chosen',path})
+  },
   upload: (path) => {
-    ipc.send('upload', {path})
+    console.log('upload')
+    ipc.send('command', {type:'upload',path})
   }
 })
 
-// window.addEventListener('DOMContentLoaded', () => {
-//     const replaceText = (selector, text) => {
-//       const element = document.getElementById(selector)
-//       if (element) element.innerText = text
-//     }
-  
-//     for (const dependency of ['chrome', 'node', 'electron']) {
-//       replaceText(`${dependency}-version`, process.versions[dependency])
-//     }
-//   })
 
-ipc.on('uploading', (event, progress) => {    
-    const element = document.getElementById("progress")
-    element.innerText= JSON.stringify(progress)
+window.addEventListener('DOMContentLoaded', () => {  
+  window.addEventListener('message', event => {
+    // do something with custom event
+    const message = event.data;    
+    ipc.send('command', message)
+  });  
 })
+
+ipc.on('event', (event, eventData) => {   
+  console.log(eventData) 
+    if(eventData.type==='path-change'){      
+      const element = document.getElementById("file-path")
+      element.innerText= JSON.stringify(eventData.path)
+    }else if(eventData.type==="progress"){
+      const element = document.getElementById("progress")
+      element.innerText= JSON.stringify(eventData.progress)
+    }
+    
+})
+

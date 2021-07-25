@@ -4,7 +4,7 @@
   "description": "My electron app",
   "main": "main.js",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "DEVELOP=true electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
