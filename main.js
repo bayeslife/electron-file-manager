@@ -1,8 +1,12 @@
 const { app, BrowserWindow,ipcMain:ipc } = require('electron');
 const fs = require('fs');
 const path = require('path')
+const debug = require('debug')('main')
 
-const uploads= []
+const config = require('./src/config')
+const { Uploader } = require('./src/processing/uploader')
+
+const uploader = Uploader(config.storageAccount)
 
 if(process.env.DEVELOP)
   app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
@@ -61,16 +65,15 @@ function createWindow () {
       chooserWin.show()    
     else if(eventData.type==='file-chosen'){
       console.log('file-chosen')
-      uploads.push(eventData.path)
+
+      uploader.add(eventData.path)      
       chooserWin.hide()
       mainWindow.webContents.send('event',{type:'path-change',path: eventData.path})      
     }
     else if(eventData.type==='upload'){
-      console.log('Upload Command')
-      console.log(eventData)
-  
-      console.log('exists',fs.existsSync(eventData.path))
-  
+      debug('Upload Command')
+      debug(eventData)
+      
       event.sender.send('event',{type:'progress',progress:0})
       setTimeout(()=>{          
           event.sender.send('event',{type:'progress',progress: 100})
