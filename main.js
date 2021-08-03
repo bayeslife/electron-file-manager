@@ -12,7 +12,7 @@ if(process.env.DEVELOP)
   app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 
   let mainWindow = null
-function createWindow () {
+function createHostWindow () {
   mainWindow = new BrowserWindow({
       show:false,
       //frame: false,
@@ -23,7 +23,7 @@ function createWindow () {
       }      
     })
         
-    mainWindow.loadURL('https://localhost:3005')
+    mainWindow.loadURL('https://localhost:3016')
 
     mainWindow.webContents.on('ready-to-show', () => {      
       mainWindow.webContents.openDevTools()
@@ -32,7 +32,7 @@ function createWindow () {
   }
 
   let chooserWin = null
-  function createChooserWindow () {
+  function createFileWindow () {
     chooserWin = new BrowserWindow({
       show:false,
       frame: false,
@@ -51,8 +51,8 @@ function createWindow () {
   }
 
   app.whenReady().then(() => {
-    createWindow()
-    createChooserWindow()
+    createHostWindow()
+    createFileWindow()
   })
 
   app.on('window-all-closed', function () {
@@ -60,12 +60,10 @@ function createWindow () {
   })
 
   ipc.on('command', (event, eventData) => {    
-    console.log('command')
+    debug(`command received ${eventData.type}`)
     if(eventData.type==='show-chooser')
       chooserWin.show()    
-    else if(eventData.type==='file-chosen'){
-      console.log('file-chosen')
-
+    else if(eventData.type==='file-chosen'){      
       uploader.add(eventData.path)      
       chooserWin.hide()
       mainWindow.webContents.send('event',{type:'path-change',path: eventData.path})      
